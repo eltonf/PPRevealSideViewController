@@ -1107,10 +1107,10 @@
         CGFloat panDiffX = currentPoint.x - _panOrigin.x;
         CGFloat panDiffY = currentPoint.y - _panOrigin.y;
 
-        if (panDiffX > 0 && panDiffX > OFFSET_TRIGGER_CHOSE_DIRECTION)
+        if (panDiffX > 0 && panDiffX > OFFSET_TRIGGER_CHOSE_DIRECTION && abs(panDiffY) < OFFSET_TRIGGER_CHOSE_DIRECTION)
             _currentPanDirection = PPRevealSideDirectionLeft;
         else
-            if (panDiffX < 0 && panDiffX < OFFSET_TRIGGER_CHOSE_DIRECTION)
+            if (panDiffX < 0 && panDiffX < OFFSET_TRIGGER_CHOSE_DIRECTION && abs(panDiffY) < OFFSET_TRIGGER_CHOSE_DIRECTION)
                 _currentPanDirection = PPRevealSideDirectionRight;
             else
                 if (panDiffY > 0 && panDiffY > OFFSET_TRIGGER_CHOSE_DIRECTION)
