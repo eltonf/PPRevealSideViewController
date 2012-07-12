@@ -1089,6 +1089,7 @@
 
 #define OFFSET_TRIGGER_CHOSE_DIRECTION 3.0
 #define OFFSET_TRIGGER_CHANGE_DIRECTION 0.0
+#define OFFSET_TRIGGER_CANCEL_DIRECTION 3.0
 #define MAX_TRIGGER_OFFSET 100.0
 
 - (void) gestureRecognizerDidPan:(UIPanGestureRecognizer*)panGesture {
@@ -1107,10 +1108,10 @@
         CGFloat panDiffX = currentPoint.x - _panOrigin.x;
         CGFloat panDiffY = currentPoint.y - _panOrigin.y;
 
-        if (panDiffX > 0 && panDiffX > OFFSET_TRIGGER_CHOSE_DIRECTION && abs(panDiffY) < OFFSET_TRIGGER_CHOSE_DIRECTION)
+        if (panDiffX > 0 && panDiffX > OFFSET_TRIGGER_CHOSE_DIRECTION && abs(panDiffY) < OFFSET_TRIGGER_CANCEL_DIRECTION)
             _currentPanDirection = PPRevealSideDirectionLeft;
         else
-            if (panDiffX < 0 && panDiffX < OFFSET_TRIGGER_CHOSE_DIRECTION && abs(panDiffY) < OFFSET_TRIGGER_CHOSE_DIRECTION)
+            if (panDiffX < 0 && panDiffX < OFFSET_TRIGGER_CHOSE_DIRECTION && abs(panDiffY) < OFFSET_TRIGGER_CANCEL_DIRECTION)
                 _currentPanDirection = PPRevealSideDirectionRight;
             else
                 if (panDiffY > 0 && panDiffY > OFFSET_TRIGGER_CHOSE_DIRECTION)
