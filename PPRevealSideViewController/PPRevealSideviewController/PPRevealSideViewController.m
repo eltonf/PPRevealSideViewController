@@ -615,7 +615,7 @@
         _rootViewController = PP_RETAIN(controller);
         _rootViewController.revealSideViewController = self;
         
-        if (PPSystemVersionGreaterOrEqualThan(5.0))
+        if (PPSystemVersionGreaterOrEqualThan(5.0) && _rootViewController != nil)
         {
             [_rootViewController willMoveToParentViewController:self];
             [self addChildViewController:_rootViewController];
