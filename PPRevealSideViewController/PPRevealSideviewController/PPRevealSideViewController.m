@@ -19,6 +19,7 @@ static const CGFloat BOUNCE_ERROR_OFFSET = 14.0;
 static const CGFloat divisionNumber = 5.0;
 static const CGFloat OFFSET_TRIGGER_CHOSE_DIRECTION = 3.0;
 static const CGFloat OFFSET_TRIGGER_CHANGE_DIRECTION = 0.0;
+static const CGFloat OFFSET_TRIGGER_CANCEL_DIRECTION = 3.0;
 static const CGFloat MAX_TRIGGER_OFFSET = 100.0;
 
 #pragma mark -
@@ -1185,13 +1186,17 @@ static const CGFloat MAX_TRIGGER_OFFSET = 100.0;
         CGFloat panDiffX = currentPoint.x - _panOrigin.x;
         CGFloat panDiffY = currentPoint.y - _panOrigin.y;
         
-        if (panDiffX > 0 && panDiffX > OFFSET_TRIGGER_CHOSE_DIRECTION) _currentPanDirection = PPRevealSideDirectionLeft;
+        if (panDiffX > 0 && panDiffX > OFFSET_TRIGGER_CHOSE_DIRECTION && abs(panDiffY) < OFFSET_TRIGGER_CANCEL_DIRECTION)
+            _currentPanDirection = PPRevealSideDirectionLeft;
         else
-            if (panDiffX < 0 && panDiffX < -OFFSET_TRIGGER_CHOSE_DIRECTION) _currentPanDirection = PPRevealSideDirectionRight;
+            if (panDiffX < 0 && panDiffX < OFFSET_TRIGGER_CHOSE_DIRECTION && abs(panDiffY) < OFFSET_TRIGGER_CANCEL_DIRECTION)
+                _currentPanDirection = PPRevealSideDirectionRight;
             else
-                if (panDiffY > 0 && panDiffY > OFFSET_TRIGGER_CHOSE_DIRECTION) _currentPanDirection = PPRevealSideDirectionTop;
+                if (panDiffY > 0 && panDiffY > OFFSET_TRIGGER_CHOSE_DIRECTION)
+                    _currentPanDirection = PPRevealSideDirectionTop;
                 else
-                    if (panDiffY < 0 && panDiffY < -OFFSET_TRIGGER_CHOSE_DIRECTION) _currentPanDirection = PPRevealSideDirectionBottom;
+                    if (panDiffY < 0 && panDiffY < -OFFSET_TRIGGER_CHOSE_DIRECTION)
+                        _currentPanDirection = PPRevealSideDirectionBottom;
     }
     
     if (_currentPanDirection == PPRevealSideDirectionNone) return;
