@@ -8,12 +8,75 @@ Pan and Tap gestures are also included !
 
 [See a demo on Youtube!](http://www.youtube.com/watch?v=lsc7RQvyy20)
 
-# Installation
+# Try it with MacBuildServer
+## Install the full sample
+<!-- MacBuildServer Install Button -->
+<div class="macbuildserver-block">
+    <a class="macbuildserver-button" href="http://macbuildserver.com/project/github/build/?xcode_project=PPRevealSideViewController.xcodeproj&amp;target=PPRevealSideViewController&amp;repo_url=git%40github.com%3Aipup%2FPPRevealSideViewController.git&amp;build_conf=Release" target="_blank"><img src="http://com.macbuildserver.github.s3-website-us-east-1.amazonaws.com/button_up.png"/></a><br/><sup><a href="http://macbuildserver.com/github/opensource/" target="_blank">by MacBuildServer</a></sup>
+</div>
+<!-- MacBuildServer Install Button -->
+## Install the easy sample (light one)
+<!-- MacBuildServer Install Button -->
+<div class="macbuildserver-block">
+    <a class="macbuildserver-button" href="http://macbuildserver.com/project/github/build/?xcode_project=EasySample%2FEasySample.xcodeproj&amp;target=EasySample&amp;repo_url=git%40github.com%3Aipup%2FPPRevealSideViewController.git&amp;build_conf=Release" target="_blank"><img src="http://com.macbuildserver.github.s3-website-us-east-1.amazonaws.com/button_up.png"/></a><br/><sup><a href="http://macbuildserver.com/github/opensource/" target="_blank">by MacBuildServer</a></sup>
+</div>
+<!-- MacBuildServer Install Button -->
 
-1. In your XCode Project, take the *PPRevealSideViewController.h and .m* from PPRevealSideViewController folder and drag them into your project. 
-2. Import *PPRevealSideViewController.h* file to your PCH file or your AppDelegate file.
-3. Add the QuartzCore Framework.
-4. Start using this new controller!
+# Installation
+The easiest way to install PPRevealSideViewController is via the [CocoaPods](http://cocoapods.org/) package manager, since it's really flexible and provides easy installation.
+
+## Via CocoaPods
+
+If you don't have cocoapods yet (shame on you), install it:
+
+``` bash
+$ [sudo] gem install cocoapods
+$ pod setup
+```
+
+Go to the directory of your Xcode project, and Create and/or Edit your Podfile and add PPRevealSideViewController:
+
+``` bash
+$ cd /path/to/MyProject
+$ touch Podfile
+# Edit the podfile using your favorite editor
+$ edit Podfile
+platform :ios 
+pod 'PPRevealSideViewController', '~> 1.0.0'
+```
+
+Run the install:
+
+``` bash
+$ pod install
+```
+
+Finally, open your project in Xcode from the .xcworkspace file (not the usual project file! This is really important)
+
+``` bash
+$ open MyProject.xcworkspace
+```
+
+Import *PPRevealSideViewController.h* file to your PCH file or your AppDelegate file.
+
+You are ready to go.
+
+## Old fashionned way
+
+1. Add PPRevealSideViewController as a submodule to your project
+
+``` bash
+$ cd /path/to/MyApplication
+# If this is a new project, initialize git...
+$ git init
+$ git submodule add git://github.com/ipup/PPRevealSideViewController.git vendor/PPRevealSideViewController
+$ git submodule update --init --recursive
+```
+
+2. In your XCode Project, take the *PPRevealSideViewController.h and .m* from PPRevealSideViewController folder and drag them into your project. 
+3. Import *PPRevealSideViewController.h* file to your PCH file or your AppDelegate file.
+4. Add the QuartzCore Framework.
+5. Start using this new controller!
 
 # ARC Support
 
@@ -21,7 +84,7 @@ PPRevealSideViewController fully supports ARC *and* non-ARC modes out of the box
 
 # Compatibility
 
-The class if fully compatible from iOS 4 to iOS 5. Not tested yet on iOS 6 nor older versions like iOS 3, but there is no reasons it doesn't work.
+The class if fully compatible from iOS 4 to iOS 6. Not tested yet on older versions like iOS 3, but there is no reasons it doesn't work.
 Please note that this class use the new container methods of UIViewController since iOS 5. By using this class on iOS 4 for example, you need to be careful with rotation handling, and presentModalViewController stuff.
 Some things you need to be aware on iOS 4 or older :
 
@@ -121,7 +184,24 @@ If you want to pop a new center controller, then do the following :
  
     [self.revealSideViewController pushViewController:c onDirection:PPRevealSideDirectionTop animated:YES forceToPopPush:YES];
 
-  
+## Open Completely
+ You can open completely a side (take the example of Facebook app when you tap on search bar). 
+ When you are on an opened side :
+    
+    [self.revealSideViewController openCompletelyAnimated:YES];
+    
+ Or when you want to open from the center controller (think to preload the controller)
+    
+    [self.revealSideViewController openCompletelySide:PPRevealSideDirectionLeft animated:YES];
+
+## Completion API
+ Every calls to PPRevealSide methods like pushing or poping can be agremented with completion block like
+ 
+     PopedViewController *c = [[PopedViewController alloc] initWithNibName:@"PopedViewController" bundle:nil ];
+	 [self.revealSideViewController pushViewController:c onDirection:PPRevealSideDirectionBottom withOffset:_offset animated:_animated completion:^{
+         PPRSLog(@"This is the end!");
+     }];
+	 	
 ## To go deeper 
 By default, the side views are not loaded. This means that even if you interface have a button to push a side view, the panning gesture won't show the controller. If you want so, you need to preload the controller you want to present.
 
@@ -161,6 +241,13 @@ Remember that, for the UIWebView for example, the best thing to do is to fit the
 
 3. In the case you do not have controllers on all sides, you can also disable the bouncing animation which show that there is no controller.
 
+You now have a great method to replace a center controller with an other from center (thanks to [xOr-developer](https://github.com/x0r-developer))
+
+    SecondViewController *c = [[SecondViewController alloc] initWithNibName:@"SecondViewController" bundle:nil];
+    [self.revealSideViewController replaceCentralViewControllerWithNewController:c animated:YES animationDirection:PPRevealSideDirectionLeft completion:^{
+		PPRSLog(@"Poped with new controller");
+	}];
+	
 ## Options
 You have some options availabled defined in PPRevealSideOptions
 
@@ -170,8 +257,25 @@ You have some options availabled defined in PPRevealSideOptions
 * PPRevealSideOptionsKeepOffsetOnRotation : Keep the same offset when rotating. By default, set to no.
 * PPRevealSideOptionsResizeSideView : Resize the side view. If set to yes, this disabled the bouncing stuff since the view behind is not large enough to show bouncing correctly. Set to NO by default.
 
+You can find it on
+-------
 
-                                                
+This control is used in these apps we developped at iPuP:
+
+[Les Ardoises](https://itunes.apple.com/fr/app/lesardoises/id535572649?mt=8)
+![Preview](http://a1918.phobos.apple.com/us/r1000/092/Purple/v4/20/2b/c9/202bc95a-5e37-4b5a-a64a-fe2a5e9e5cc5/mzl.bonbayen.320x480-75.jpg)
+
+[iAddict V3](https://itunes.apple.com/fr/app/iaddict-v2/id473749663?mt=8)
+![Preview](http://cdn.iphoneaddict.fr/wp-content/uploads/2013/02/iAddict-v3.jpg)
+
+[JDGeek](https://itunes.apple.com/fr/app/journal-du-geek-officiel/id541881667?mt=8)
+![Preview](http://a845.phobos.apple.com/us/r1000/097/Purple/v4/dd/c3/c6/ddc3c674-6371-2e1b-cf1a-37af9e2b584f/mzl.uonfdwvp.320x480-75.jpg)
+
+[JDGamer](https://itunes.apple.com/fr/app/journal-du-gamer-officiel/id541883168?mt=8)
+![Preview](http://a99.phobos.apple.com/us/r1000/096/Purple2/v4/0d/d2/5a/0dd25ac5-ef5a-621f-07ec-8832a207ace2/mzl.jkbdncdn.320x480-75.jpg)
+
+Please feel free to PR the readme for adding your app!
+
 License
 -------
 
